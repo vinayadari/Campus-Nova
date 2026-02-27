@@ -53,10 +53,10 @@ const Projects = () => {
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'Open': return 'bg-green-100 text-green-700 border-green-200';
-            case 'In Progress': return 'bg-blue-100 text-blue-700 border-blue-200';
-            case 'Completed': return 'bg-gray-100 text-gray-700 border-gray-200';
-            default: return 'bg-gray-100';
+            case 'Open': return 'bg-[rgba(16,185,129,0.12)] text-[#34d399] border-[rgba(52,211,153,0.3)]';
+            case 'In Progress': return 'bg-[rgba(59,130,246,0.12)] text-[#93c5fd] border-[rgba(59,130,246,0.3)]';
+            case 'Completed': return 'bg-[rgba(255,255,255,0.06)] text-[#94a3b8] border-[rgba(255,255,255,0.1)]';
+            default: return 'bg-[rgba(255,255,255,0.06)]';
         }
     };
 
@@ -66,21 +66,21 @@ const Projects = () => {
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Projects Board</h1>
-                    <p className="text-gray-500 mt-1">Collaborate on coding projects, research, and more.</p>
+                    <h1 className="text-3xl font-extrabold text-[#f8fafc] tracking-tight">Projects Board</h1>
+                    <p className="text-[#94a3b8] mt-1">Collaborate on coding projects, research, and more.</p>
                 </div>
                 <button
                     onClick={() => setShowModal(true)}
-                    className="btn-primary h-12 px-6 flex items-center justify-center font-bold shadow-indigo-100 shadow-xl"
+                    className="btn-primary h-12 px-6 flex items-center justify-center font-bold"
                 >
                     <span className="text-xl mr-2">+</span> Create Project
                 </button>
             </div>
 
             {/* Filter Bar */}
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-wrap gap-4 items-end">
+            <div className="card !p-4 flex flex-wrap gap-4 items-end">
                 <div className="flex-1 min-w-[200px]">
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Search Projects</label>
+                    <label className="block text-[10px] font-bold text-[#94a3b8] uppercase tracking-widest mb-1.5 ml-1">Search Projects</label>
                     <input
                         className="input text-sm h-10"
                         placeholder="Search by title..."
@@ -89,7 +89,7 @@ const Projects = () => {
                     />
                 </div>
                 <div className="w-48">
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Status</label>
+                    <label className="block text-[10px] font-bold text-[#94a3b8] uppercase tracking-widest mb-1.5 ml-1">Status</label>
                     <select
                         className="input text-sm h-10"
                         value={filters.status}
@@ -102,7 +102,7 @@ const Projects = () => {
                     </select>
                 </div>
                 <div className="w-48">
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Tag</label>
+                    <label className="block text-[10px] font-bold text-[#94a3b8] uppercase tracking-widest mb-1.5 ml-1">Tag</label>
                     <input
                         className="input text-sm h-10"
                         placeholder="Filter by tag..."
@@ -115,10 +115,10 @@ const Projects = () => {
             {loading ? (
                 <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div></div>
             ) : projects.length === 0 ? (
-                <div className="py-20 text-center bg-white rounded-2xl border border-dashed border-gray-200">
+                <div className="card py-20 text-center rounded-2xl border-dashed">
                     <span className="text-4xl mb-4 block">🚀</span>
-                    <h3 className="text-lg font-bold text-gray-900">No projects found</h3>
-                    <p className="text-gray-500">Be the first to create one!</p>
+                    <h3 className="text-lg font-bold text-[#f8fafc]">No projects found</h3>
+                    <p className="text-[#94a3b8]">Be the first to create one!</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -134,33 +134,33 @@ const Projects = () => {
                                         {project.status}
                                     </div>
                                     {project.deadline && (
-                                        <span className="text-[10px] font-bold text-gray-400 flex items-center">
+                                        <span className="text-[10px] font-bold text-[#64748b] flex items-center">
                                             📅 {new Date(project.deadline).toLocaleDateString()}
                                         </span>
                                     )}
                                 </div>
 
-                                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors uppercase tracking-tight">{project.title}</h3>
-                                <p className="text-sm text-gray-500 mb-4 line-clamp-2 leading-relaxed flex-1">
+                                <h3 className="text-xl font-bold text-[#f8fafc] mb-2 group-hover:text-[#06b6d4] transition-colors uppercase tracking-tight">{project.title}</h3>
+                                <p className="text-sm text-[#94a3b8] mb-4 line-clamp-2 leading-relaxed flex-1">
                                     {project.description}
                                 </p>
 
                                 <div className="mb-4 space-y-3">
                                     <div>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Owner</p>
+                                        <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-wider mb-1.5">Owner</p>
                                         <div className="flex items-center">
-                                            <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-700 mr-2 border border-white shadow-sm overflow-hidden">
+                                            <div className="w-6 h-6 rounded-full bg-[rgba(6,182,212,0.15)] flex items-center justify-center text-[10px] font-bold text-[#06b6d4] mr-2 border border-[var(--color-bg)] shadow-sm overflow-hidden">
                                                 {project.owner?.avatar ? <img src={project.owner.avatar} className="w-full h-full object-cover" /> : getInitials(project.owner?.name)}
                                             </div>
-                                            <span className="text-xs font-semibold text-gray-700">{isOwner ? 'You' : project.owner?.name}</span>
+                                            <span className="text-xs font-semibold text-[#cbd5e1]">{isOwner ? 'You' : project.owner?.name}</span>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Members ({project.members?.length}/{project.maxMembers})</p>
+                                        <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-wider mb-1.5">Members ({project.members?.length}/{project.maxMembers})</p>
                                         <div className="flex -space-x-2">
                                             {project.members?.map((m, i) => (
-                                                <div key={i} className="w-7 h-7 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-[8px] font-bold text-gray-600 shadow-sm overflow-hidden" title={m.name}>
+                                                <div key={i} className="w-7 h-7 rounded-full bg-[rgba(255,255,255,0.08)] border-2 border-[var(--color-bg)] flex items-center justify-center text-[8px] font-bold text-[#94a3b8] shadow-sm overflow-hidden" title={m.name}>
                                                     {m.avatar ? <img src={m.avatar} className="w-full h-full object-cover" /> : getInitials(m.name)}
                                                 </div>
                                             ))}
@@ -170,22 +170,22 @@ const Projects = () => {
 
                                 <div className="flex flex-wrap gap-1.5 mb-6">
                                     {project.tags?.map((tag, i) => (
-                                        <span key={i} className="px-2 py-0.5 bg-gray-50 text-gray-500 rounded text-[10px] font-medium border border-gray-200">#{tag}</span>
+                                        <span key={i} className="px-2 py-0.5 bg-[rgba(255,255,255,0.04)] text-[#94a3b8] rounded text-[10px] font-medium border border-[rgba(255,255,255,0.06)]">#{tag}</span>
                                     ))}
                                 </div>
 
-                                <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
+                                <div className="pt-4 border-t border-[rgba(255,255,255,0.06)] flex items-center justify-between">
                                     <div className="flex flex-wrap gap-1">
                                         {project.skillsNeeded?.slice(0, 2).map((s, i) => (
-                                            <span key={i} className="text-[10px] font-bold text-indigo-500">· {s}</span>
+                                            <span key={i} className="text-[10px] font-bold text-[#06b6d4]">· {s}</span>
                                         ))}
                                     </div>
                                     {isMember ? (
-                                        <span className="text-xs font-bold text-green-600 bg-green-50 px-3 py-1.5 rounded-lg flex items-center">
+                                        <span className="text-xs font-bold text-[#34d399] bg-[rgba(16,185,129,0.12)] px-3 py-1.5 rounded-lg flex items-center">
                                             <span className="mr-1.5">✓</span> Already Joined
                                         </span>
                                     ) : isFull ? (
-                                        <span className="text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1.5 rounded-lg">Full</span>
+                                        <span className="text-xs font-bold text-[#94a3b8] bg-[rgba(255,255,255,0.06)] px-3 py-1.5 rounded-lg">Full</span>
                                     ) : (
                                         <button
                                             onClick={() => handleJoin(project._id)}
@@ -206,7 +206,7 @@ const Projects = () => {
                 <form onSubmit={handleCreate} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Project Title*</label>
+                            <label className="section-label block mb-1.5">Project Title*</label>
                             <input
                                 className="input h-11"
                                 placeholder="e.g. AI Research Bot"
@@ -216,7 +216,7 @@ const Projects = () => {
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Description*</label>
+                            <label className="section-label block mb-1.5">Description*</label>
                             <textarea
                                 className="input min-h-[100px] !py-3"
                                 placeholder="Describe your project goals and scope..."
@@ -226,7 +226,7 @@ const Projects = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Max Members</label>
+                            <label className="section-label block mb-1.5">Max Members</label>
                             <input
                                 type="number"
                                 className="input h-11"
@@ -237,7 +237,7 @@ const Projects = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Deadline (Optional)</label>
+                            <label className="section-label block mb-1.5">Deadline (Optional)</label>
                             <input
                                 type="date"
                                 className="input h-11"
@@ -246,7 +246,7 @@ const Projects = () => {
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Tags</label>
+                            <label className="section-label block mb-1.5">Tags</label>
                             <TagInput
                                 value={newProject.tags}
                                 onChange={(tags) => setNewProject({ ...newProject, tags })}
@@ -254,7 +254,7 @@ const Projects = () => {
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Skills Needed</label>
+                            <label className="section-label block mb-1.5">Skills Needed</label>
                             <TagInput
                                 value={newProject.skillsNeeded}
                                 onChange={(skills) => setNewProject({ ...newProject, skillsNeeded: skills })}
@@ -262,7 +262,7 @@ const Projects = () => {
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">GitHub Repo Link</label>
+                            <label className="section-label block mb-1.5">GitHub Repo Link</label>
                             <input
                                 className="input h-11"
                                 placeholder="https://github.com/..."
@@ -271,7 +271,7 @@ const Projects = () => {
                             />
                         </div>
                     </div>
-                    <div className="pt-6 border-t border-gray-100 flex justify-end gap-3">
+                    <div className="pt-6 border-t border-[rgba(255,255,255,0.06)] flex justify-end gap-3">
                         <button type="button" onClick={() => setShowModal(false)} className="btn-secondary h-11 px-6 font-bold">Cancel</button>
                         <button type="submit" className="btn-primary h-11 px-10 font-bold">Launch Project 🚀</button>
                     </div>

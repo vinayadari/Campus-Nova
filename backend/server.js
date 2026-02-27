@@ -13,7 +13,7 @@ const clientUrl = (process.env.CLIENT_URL || 'http://localhost:5173').trim();
 // ─── Express Setup ──────────────────────────────────────────────
 const app = express();
 app.use(cors({
-    origin: clientUrl,
+    origin: [clientUrl, 'http://localhost:5173', 'http://localhost:5174'],
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -35,7 +35,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: clientUrl,
+        origin: [clientUrl, 'http://localhost:5173', 'http://localhost:5174'],
         methods: ['GET', 'POST'],
         credentials: true
     },
@@ -43,11 +43,15 @@ const io = new Server(server, {
 
 const onlineUsers = new Map();
 
+// Attach io to the app so routes can access it
+app.set('io', io);
+
 io.on('connection', (socket) => {
     console.log('⚡ Socket connected:', socket.id);
 
     socket.on('user_online', (userId) => {
         onlineUsers.set(userId, socket.id);
+        socket.join(userId.toString()); // Join a personal room for targeted events
         io.emit('online_users', Array.from(onlineUsers.keys()));
     });
 
@@ -57,6 +61,34 @@ io.on('connection', (socket) => {
 
     socket.on('send_message', async ({ roomId, senderId, content }) => {
         try {
+            // Check if this is an intro room with restrictions
+            const room = await Chatroom.findById(roomId);
+            if (!room) {
+                socket.emit('message_error', { error: 'Room not found.' });
+                return;
+            }
+
+            if (room.isIntro) {
+                const User = require('./models/User');
+                const sender = await User.findById(senderId);
+                const otherUserId = room.participants.find(p => !p.equals(senderId));
+                const isConnected = sender.connections.some(c => c.equals(otherUserId));
+
+                if (!isConnected) {
+                    // Check if this sender already sent their 1 allowed intro
+                    const senderMsgCount = await Message.countDocuments({
+                        room: roomId,
+                        sender: senderId,
+                    });
+                    if (senderMsgCount >= 1) {
+                        socket.emit('message_error', {
+                            error: 'Intro limit reached. Wait for them to accept your connection request.',
+                        });
+                        return;
+                    }
+                }
+            }
+
             let message = await Message.create({
                 room: roomId,
                 sender: senderId,
@@ -77,7 +109,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('typing', ({ roomId, userName }) => {
-        socket.to(roomId).emit('user_typing', { userName });
+        socket.to(roomId).emit('user_typing', { roomId, userName });
     });
 
     socket.on('disconnect', () => {

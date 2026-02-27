@@ -21,9 +21,14 @@ const userSchema = new mongoose.Schema(
         connections: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         pendingRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         sentRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
+        campusCredits: { type: Number, default: 0 },
         github: { type: String, default: '' },
         linkedin: { type: String, default: '' },
         portfolio: { type: String, default: '' },
+        twitter: { type: String, default: '' },
+        instagram: { type: String, default: '' },
+        discord: { type: String, default: '' },
     },
     { timestamps: true }
 );

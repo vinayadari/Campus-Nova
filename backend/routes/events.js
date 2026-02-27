@@ -71,6 +71,10 @@ router.post('/:id/rsvp', async (req, res) => {
         event.attendees.push(req.user._id);
         await event.save();
 
+        // +5 campus credits for attending an event
+        const User = require('../models/User');
+        await User.findByIdAndUpdate(req.user._id, { $inc: { campusCredits: 5 } });
+
         res.json(event);
     } catch (err) {
         res.status(500).json({ error: err.message });

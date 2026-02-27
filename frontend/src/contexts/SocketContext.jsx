@@ -1,34 +1,42 @@
-import React, { createContext, useContext, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
 
-const SocketContext = createContext();
+const SocketContext = createContext({ socket: null });
 
 export const SocketProvider = ({ children }) => {
     const { user } = useAuth();
-    const socketRef = useRef();
+    const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        if (user) {
-            // Connect to the same host using proxy
-            socketRef.current = io('/');
+        if (!user) return;
 
-            socketRef.current.on('connect', () => {
-                console.log('Connected to socket', socketRef.current.id);
-                socketRef.current.emit('user_online', user._id);
-            });
+        // Connect to socket server — uses Vite proxy in dev
+        const newSocket = io('/', {
+            transports: ['websocket', 'polling'],
+            reconnectionDelay: 1000,
+            reconnectionAttempts: 5,
+        });
 
-            return () => {
-                if (socketRef.current) {
-                    socketRef.current.disconnect();
-                    socketRef.current = null;
-                }
-            };
-        }
+        newSocket.on('connect', () => {
+            console.log('✅ Socket connected:', newSocket.id);
+            newSocket.emit('user_online', user._id);
+        });
+
+        newSocket.on('connect_error', (err) => {
+            console.warn('Socket connection error:', err.message);
+        });
+
+        setSocket(newSocket);
+
+        return () => {
+            newSocket.disconnect();
+            setSocket(null);
+        };
     }, [user]);
 
     return (
-        <SocketContext.Provider value={{ socket: socketRef.current }}>
+        <SocketContext.Provider value={{ socket }}>
             {children}
         </SocketContext.Provider>
     );
